@@ -1,7 +1,8 @@
-# libbox3d - ![Box3D Logo](https://box2d
+# libbox3d - 3D physics engine for games
 
-This is a `build2` package for the [`<UPSTREAM-NAME>`](https://<UPSTREAM-URL>)
-C library. It provides <SUMMARY-OF-FUNCTIONALITY>.
+This is a `build2` package for the [Box3D](https://github.com/erincatto/box3d)
+C library. It provides a portable 3D rigid body physics engine for games
+(collision detection, joints, continuous physics, and related features).
 
 
 ## Usage
@@ -10,13 +11,19 @@ To start using `libbox3d` in your project, add the following `depends`
 value to your `manifest`, adjusting the version constraint as appropriate:
 
 ```
-depends: libbox3d ^<VERSION>
+depends: libbox3d ^0.1.0
 ```
 
 Then import the library in your `buildfile`:
 
 ```
-import libs = libbox3d%lib{<TARGET>}
+import libs = libbox3d%lib{box3d}
+```
+
+Public headers are installed under `include/box3d/`. Include them as:
+
+```c
+#include <box3d/box3d.h>
 ```
 
 
@@ -25,18 +32,12 @@ import libs = libbox3d%lib{<TARGET>}
 This package provides the following importable targets:
 
 ```
-lib{<TARGET>}
+lib{box3d}
 ```
 
-<DESCRIPTION-OF-IMPORTABLE-TARGETS>
+This is the Box3D physics library.
 
 
 ## Configuration variables
 
-This package provides the following configuration variables:
-
-```
-[bool] config.libbox3d.<VARIABLE> ?= false
-```
-
-<DESCRIPTION-OF-CONFIG-VARIABLES>
+...

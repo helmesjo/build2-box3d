@@ -3,12 +3,14 @@ name: libbox3d
 version: 0.1.0-a.0.z
 language: c
 project: box3d
-summary: ![Box3D Logo](https://box2d
+summary: 3D physics engine for games
 license: MIT ; MIT License.
+topics: physics, engine, collision detection, rigid body
 description-file: README.md
 package-description-file: PACKAGE-README.md
-url: https://example.org/upstream
-email: upstream@example.org
+url: https://box2d.org
+src-url: https://github.com/erincatto/box3d
+doc-url: https://box2d.org/documentation3d/
 package-url: https://github.com/build2-packaging/box3d
 package-email: packaging@build2.org ; Mailing list.
 depends: * build2 >= 0.18.0
