@@ -1,0 +1,15 @@
+: 1
+name: libbox3d
+version: 0.1.0-a.0.z
+language: c
+project: box3d
+summary: ![Box3D Logo](https://box2d
+license: MIT ; MIT License.
+description-file: README.md
+package-description-file: PACKAGE-README.md
+url: https://example.org/upstream
+email: upstream@example.org
+package-url: https://github.com/build2-packaging/box3d
+package-email: packaging@build2.org ; Mailing list.
+depends: * build2 >= 0.18.0
+depends: * bpkg >= 0.18.0

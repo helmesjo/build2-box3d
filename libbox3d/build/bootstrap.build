@@ -1,0 +1,7 @@
+project = libbox3d
+
+using version
+using config
+using test
+using install
+using dist
