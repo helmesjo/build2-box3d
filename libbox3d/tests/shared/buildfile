@@ -1,0 +1,14 @@
+# In-tree helpers used by upstream unit tests.
+#
+# Internal symbols (b3Alloc, b3CreateBitSet, etc.) are not exported from the
+# DLL, so white-box tests must link against the static archive.
+import libs = libbox3d%liba{box3d}
+
+./: libue{box3d-test-shared}
+
+libue{box3d-test-shared}: {h c}{**} $libs
+
+# Deterministic math (match upstream CMake: -ffp-contract=off).
+#
+if ($c.id != 'msvc')
+  c.coptions += -ffp-contract=off

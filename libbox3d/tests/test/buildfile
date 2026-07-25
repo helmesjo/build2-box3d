@@ -1,0 +1,29 @@
+# Upstream white-box unit suite.
+#
+# Internal symbols (b3Alloc, b3CreateBitSet, etc.) are not exported from the
+# DLL, so white-box tests must link against the static archive.
+import libs = libbox3d%liba{box3d}
+
+include ../shared/
+
+./: exe{driver}: c{**} h{**} ../shared/libue{box3d-test-shared} $libs
+
+# Private implementation headers live in the package src/ directory. The tests
+# subproject has its own src_root (tests/), so walk up to the package root.
+#
+out_pfx_src = [dir_path] $out_root/../src/
+src_pfx_src = [dir_path] $src_root/../src/
+out_pfx_shared = [dir_path] $out_base/../shared/
+src_pfx_shared = [dir_path] $src_base/../shared/
+
+c.poptions =+ "-I$out_pfx_src" "-I$src_pfx_src" \
+              "-I$out_pfx_shared" "-I$src_pfx_shared"
+
+# Deterministic math (match upstream CMake: -ffp-contract=off).
+#
+if ($c.id != 'msvc')
+  c.coptions += -ffp-contract=off
+
+# Match library compile flags used by white-box tests.
+#
+c.poptions += -DBOX3D_VALIDATE
