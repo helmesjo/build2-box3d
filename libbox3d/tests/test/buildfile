@@ -3,6 +3,7 @@
 # Internal symbols (b3Alloc, b3CreateBitSet, etc.) are not exported from the
 # DLL, so white-box tests must link against the static archive.
 import libs = libbox3d%liba{box3d}
+import! [metadata, rule_hint=c.link] box3d = libbox3d%lib{box3d}
 
 include ../shared/
 
@@ -24,6 +25,10 @@ c.poptions =+ "-I$out_pfx_src" "-I$src_pfx_src" \
 if ($c.id != 'msvc')
   c.coptions += -ffp-contract=off
 
-# Match library compile flags used by white-box tests.
+# Match private library compile flags used by helpers that touch internals.
 #
-c.poptions += -DBOX3D_VALIDATE
+if $($box3d: libbox3d.disable_simd)
+  c.poptions += -DBOX3D_DISABLE_SIMD
+
+if $($box3d: libbox3d.validate)
+  c.poptions += -DBOX3D_VALIDATE

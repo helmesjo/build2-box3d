@@ -29,9 +29,19 @@ src_pfx_src = [dir_path] $src_root/src/
 c.poptions =+ "-I$out_pfx_src" "-I$src_pfx_src" \
               "-I$out_pfx_inc" "-I$src_pfx_inc"
 
-# Upstream validation macros are only active when NDEBUG is not defined.
+# Map config.libbox3d.* to BOX3D_* macros.
 #
-c.poptions += -DBOX3D_VALIDATE
+if $config.libbox3d.disable_simd
+  c.poptions += -DBOX3D_DISABLE_SIMD
+
+if $config.libbox3d.double_precision
+  c.poptions += -DBOX3D_DOUBLE_PRECISION
+
+if $config.libbox3d.enable_assert
+  c.poptions += -DB3_ENABLE_ASSERT
+
+if $config.libbox3d.validate
+  c.poptions += -DBOX3D_VALIDATE
 
 # Deterministic math (match upstream CMake: -ffp-contract=off).
 # Hidden visibility (match upstream CMake: CMAKE_C_VISIBILITY_PRESET hidden).
@@ -70,7 +80,27 @@ lib{box3d}:
 {
   c.export.poptions = "-I$out_pfx_inc" "-I$src_pfx_inc"
   c.export.libs = $intf_libs
+
+  # Export configuration as target metadata so consumers and the tests
+  # subproject can query compile-time options.
+  #
+  export.metadata = 1 libbox3d
+
+  libbox3d.disable_simd     = [bool] $config.libbox3d.disable_simd
+  libbox3d.double_precision = [bool] $config.libbox3d.double_precision
+  libbox3d.enable_assert    = [bool] $config.libbox3d.enable_assert
+  libbox3d.validate         = [bool] $config.libbox3d.validate
 }
+
+# ABI: consumers must compile with the same precision mode as the library.
+#
+if $config.libbox3d.double_precision
+  lib{box3d}: c.export.poptions += -DBOX3D_DOUBLE_PRECISION
+
+# Upstream declares B3_ENABLE_ASSERT PUBLIC so consumers see active asserts too.
+#
+if $config.libbox3d.enable_assert
+  lib{box3d}: c.export.poptions += -DB3_ENABLE_ASSERT
 
 # Consumers of the Windows shared library need BOX3D_DLL for dllimport.
 #

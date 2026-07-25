@@ -3,6 +3,7 @@
 # Internal symbols (b3Alloc, b3CreateBitSet, etc.) are not exported from the
 # DLL, so white-box tests must link against the static archive.
 import libs = libbox3d%liba{box3d}
+import! [metadata, rule_hint=c.link] box3d = libbox3d%lib{box3d}
 
 ./: libue{box3d-test-shared}
 
@@ -12,3 +13,14 @@ libue{box3d-test-shared}: {h c}{**} $libs
 #
 if ($c.id != 'msvc')
   c.coptions += -ffp-contract=off
+
+# Match private library compile flags used by helpers that touch internals.
+#
+if $($box3d: libbox3d.disable_simd)
+  c.poptions += -DBOX3D_DISABLE_SIMD
+
+if (!$($box3d: libbox3d.disable_simd) && $c.target.system == 'emscripten')
+  c.coptions += -msimd128 -msse2
+
+if $($box3d: libbox3d.validate)
+  c.poptions += -DBOX3D_VALIDATE

@@ -14,3 +14,23 @@ c{*}: extension = c
 # The test target for cross-testing (running tests under Wine, etc).
 #
 test.target = $c.target
+
+# Build the scalar fallback instead of SSE2/NEON (slower).
+#
+config [bool] config.libbox3d.disable_simd ?= false
+
+# Large-world mode. Stores world positions in double precision. Affects ABI.
+# Consumers must see the same define via the library export interface.
+#
+config [bool] config.libbox3d.double_precision ?= false
+
+# Keep B3_ASSERT active even in release builds (NDEBUG defined).
+# Upstream sets this for MSVC RelWithDebInfo via a PUBLIC define so consumers
+# also see it. Default off to match the release behaviour of other platforms.
+#
+config [bool] config.libbox3d.enable_assert ?= false
+
+# Enable heavy internal validation when NDEBUG is not defined.
+# Matches upstream CMake default ON for a top-level library build.
+#
+config [bool] config.libbox3d.validate ?= true
