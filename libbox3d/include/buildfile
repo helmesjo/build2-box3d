@@ -2,7 +2,7 @@ pub_hdrs = h{**}
 
 ./: $pub_hdrs
 
-# Install recreating subdirectories.
+# Install into include/box3d/ recreating subdirectories.
 #
 h{*}:
 {

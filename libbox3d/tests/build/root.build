@@ -1,3 +1,7 @@
+# Box3D requires C17.
+#
+c.std = 17
+
 using c
 
 h{*}: extension = h

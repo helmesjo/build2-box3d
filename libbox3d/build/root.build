@@ -2,6 +2,10 @@
 #
 #c.internal.scope = current
 
+# Box3D requires C17 (_Static_assert, anonymous unions).
+#
+c.std = 17
+
 using c
 
 h{*}: extension = h

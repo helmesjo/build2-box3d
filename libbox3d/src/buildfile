@@ -1,6 +1,5 @@
 intf_libs = # Interface dependencies.
 impl_libs = # Implementation dependencies.
-#import xxxx_libs += libhello%lib{hello}
 
 # Public headers.
 #
@@ -16,6 +15,10 @@ lib{box3d}: $pub/{$pub_hdrs}
 #
 lib{box3d}: {h c}{**} $impl_libs $intf_libs
 
+# Make .inl private headers available to the compilation (included from .c).
+#
+lib{box3d}: file{**.inl}: include = adhoc
+
 # Build options.
 #
 out_pfx_inc = [dir_path] $out_root/include/
@@ -26,8 +29,40 @@ src_pfx_src = [dir_path] $src_root/src/
 c.poptions =+ "-I$out_pfx_src" "-I$src_pfx_src" \
               "-I$out_pfx_inc" "-I$src_pfx_inc"
 
-#obja{*}: c.poptions += -DBOX3D_STATIC_BUILD
-#objs{*}: c.poptions += -DBOX3D_SHARED_BUILD
+# Upstream validation macros are only active when NDEBUG is not defined.
+#
+c.poptions += -DBOX3D_VALIDATE
+
+# Deterministic math (match upstream CMake: -ffp-contract=off).
+# Hidden visibility (match upstream CMake: CMAKE_C_VISIBILITY_PRESET hidden).
+#
+if ($c.id != 'msvc')
+{
+  c.coptions += -ffp-contract=off
+  objs{*}: c.coptions += -fvisibility=hidden
+}
+
+# Emscripten requires explicit flags to enable WebAssembly SIMD and map SSE2
+# intrinsics onto it (match upstream CMake: -msimd128 -msse2).
+#
+if (!$config.libbox3d.disable_simd && $c.target.system == 'emscripten')
+  c.coptions += -msimd128 -msse2
+
+# Shared library export: upstream uses box3d_EXPORTS when building the shared
+# library and BOX3D_DLL when consuming the Windows DLL.
+#
+objs{*}: c.poptions += -Dbox3d_EXPORTS
+
+# System libraries.
+#
+if ($c.target.system != 'win32-msvc')
+{
+  # libm for sqrtf and friends on Unix-like systems.
+  #
+  # pthread for the worker-thread implementation in timer.c & scheduler.c.
+  #
+  c.libs += -lm -pthread
+}
 
 # Export options.
 #
@@ -37,8 +72,15 @@ lib{box3d}:
   c.export.libs = $intf_libs
 }
 
-#liba{box3d}: c.export.poptions += -DBOX3D_STATIC
-#libs{box3d}: c.export.poptions += -DBOX3D_SHARED
+# Consumers of the Windows shared library need BOX3D_DLL for dllimport.
+#
+if ($c.target.class == 'windows')
+  libs{box3d}: c.export.poptions += -DBOX3D_DLL
+
+# Re-export system libs that are part of the public link interface.
+#
+if ($c.target.system != 'win32-msvc')
+  lib{box3d}: c.export.libs += -lm
 
 # For pre-releases use the complete version to make sure they cannot
 # be used in place of another pre-release or the final version. See

@@ -30,3 +30,4 @@
 # Compilation database.
 #
 compile_commands.json
+*.b3rec
