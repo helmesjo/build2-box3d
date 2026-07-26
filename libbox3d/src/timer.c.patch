@@ -1,0 +1,11 @@
+--- /c/Users/helme/git/b2/box3d/libbox3d/src/timer.c.orig	2026-07-25 21:27:26.850739000 +0200
++++ /c/Users/helme/git/b2/box3d/libbox3d/src/timer.c	2026-07-26 17:18:02.098886300 +0200
+@@ -224,7 +224,7 @@
+ 	b3Free( t, sizeof( b3Thread ) );
+ }
+ 
+-#elif defined( __linux__ ) || defined( __EMSCRIPTEN__ )
++#elif defined( __linux__ ) || defined( __EMSCRIPTEN__ ) || defined( __FreeBSD__ ) || defined( __OpenBSD__ ) || defined( __NetBSD__ )
+ 
+ #include <sched.h>
+ #include <time.h>
