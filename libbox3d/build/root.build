@@ -11,6 +11,12 @@ using c
 h{*}: extension = h
 c{*}: extension = c
 
+# build2 does not yet map c.std to a /std: flag on MSVC
+# https://github.com/build2/build2/issues/323
+#
+if ($c.id == 'msvc')
+  c.coptions += /std:c17
+
 # The test target for cross-testing (running tests under Wine, etc).
 #
 test.target = $c.target
