@@ -1,0 +1,7 @@
+: 1
+name: libbox3d
+version: 0.1.0+1
+language: c
+project: box3d
+summary: 3D physics engine for games
+license: MIT; MIT License.
