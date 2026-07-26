@@ -17,7 +17,7 @@ lib{box3d}: {h c}{**} $impl_libs $intf_libs
 
 # Make .inl private headers available to the compilation (included from .c).
 #
-lib{box3d}: file{**.inl}: include = adhoc
+lib{box3d}: file{**.inl **.natvis}: include = adhoc
 
 # Build options.
 #
@@ -124,3 +124,5 @@ else
 # Don't install private headers.
 #
 h{*}: install = false
+
+file{**.natvis}: install = share/box3d/
