@@ -1,7 +1,12 @@
-./: {*/ -build/} doc{README.md PACKAGE-README.md} legal{LICENSE} manifest
+./: {*/ -build/ -docs/} docs/doc{**} doc{README.md PACKAGE-README.md} legal{LICENSE} manifest
 
-doc{*}:   install = share/doc/box3d/
-legal{*}: install = share/doc/box3d/
+legal{*}:    install = share/doc/box3d/
+doc{*}:      install = share/doc/box3d/
+docs/doc{*}:
+{
+  install = share/doc/box3d/docs/
+  install.subdirs = true
+}
 
 # Don't install tests.
 #

@@ -1,1 +1,2 @@
+docs          symlink=dir
 include/box3d symlink=dir
