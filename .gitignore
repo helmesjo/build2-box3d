@@ -8,3 +8,8 @@
 #
 compile_commands.json
 *.b3rec
+
+# Benchmark app writes timing CSV/DAT relative to the process CWD.
+#
+*.csv
+*.dat

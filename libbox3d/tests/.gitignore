@@ -2,11 +2,6 @@
 #
 driver
 
-# Benchmark app writes timing CSV/DAT next to the executable.
-#
-*.csv
-*.dat
-
 # Testscript output directories (can be symlinks).
 # Note: do not ignore a bare "test" entry, the upstream unit suite lives in
 # tests/test/ and must be tracked.
