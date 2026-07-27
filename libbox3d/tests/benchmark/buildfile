@@ -1,0 +1,26 @@
+# Upstream benchmark application.
+#
+import libs = libbox3d%liba{box3d}
+import! [metadata, rule_hint=c.link] box3d = libbox3d%lib{box3d}
+
+include ../shared/
+
+./: exe{driver}: c{**} ../shared/libue{box3d-test-shared} $libs
+
+# Default full runs are too slow for the normal test suite.
+#
+exe{driver}: test = false
+
+out_pfx_shared = [dir_path] $out_base/../shared/
+src_pfx_shared = [dir_path] $src_base/../shared/
+
+c.poptions =+ "-I$out_pfx_shared" "-I$src_pfx_shared"
+
+if ($c.id != 'msvc')
+  c.coptions += -ffp-contract=off
+
+if $($box3d: libbox3d.disable_simd)
+  c.poptions += -DBOX3D_DISABLE_SIMD
+
+if $($box3d: libbox3d.validate)
+  c.poptions += -DBOX3D_VALIDATE
